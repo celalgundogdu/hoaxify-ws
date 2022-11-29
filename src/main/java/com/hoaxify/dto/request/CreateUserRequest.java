@@ -11,7 +11,7 @@ import javax.validation.constraints.Size;
 @Data
 public class CreateUserRequest {
 
-    @NotBlank
+    @NotBlank(message = "{hoaxify.constraint.username.NotBlank.message}")
     @Size(min = 4, max = 50)
     @UniqueUsername
     private String username;
@@ -23,6 +23,6 @@ public class CreateUserRequest {
     @NotNull
     @Size(min = 8, max = 255)
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).*$",
-            message = "Password must contain at least one lower case, one upper case and a number")
+            message = "{hoaxify.constraint.password.Pattern.message}")
     private String password;
 }
