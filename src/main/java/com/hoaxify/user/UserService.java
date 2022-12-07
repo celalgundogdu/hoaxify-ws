@@ -14,10 +14,10 @@ public class UserService {
     private final UserDtoConverter converter;
     private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository, UserDtoConverter converter) {
+    public UserService(UserRepository userRepository, UserDtoConverter converter, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.converter = converter;
-        this.passwordEncoder =  new BCryptPasswordEncoder();
+        this.passwordEncoder =  passwordEncoder;
     }
 
     public UserResponse createUser(CreateUserRequest createUserRequest) {
