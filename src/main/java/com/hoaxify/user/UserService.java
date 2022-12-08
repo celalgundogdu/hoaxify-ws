@@ -3,7 +3,8 @@ package com.hoaxify.user;
 import com.hoaxify.dto.converter.UserDtoConverter;
 import com.hoaxify.dto.request.CreateUserRequest;
 import com.hoaxify.dto.response.UserResponse;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -26,5 +27,12 @@ public class UserService {
         user.setDisplayName(createUserRequest.getDisplayName());
         user.setPassword(this.passwordEncoder.encode(createUserRequest.getPassword()));
         return converter.convertToUserResponse(userRepository.save(user));
+    }
+
+    public Page<UserResponse> getUsers(Pageable page, User user) {
+        if(user == null) {
+            return userRepository.findAll(page).map(converter::convertToUserResponse);
+        }
+        return userRepository.findByUsernameNot(user.getUsername(), page).map(converter::convertToUserResponse);
     }
 }
