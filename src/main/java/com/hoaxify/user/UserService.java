@@ -2,8 +2,8 @@ package com.hoaxify.user;
 
 import com.hoaxify.dto.converter.UserDtoConverter;
 import com.hoaxify.dto.request.CreateUserRequest;
+import com.hoaxify.dto.request.UpdateUserRequest;
 import com.hoaxify.dto.response.UserResponse;
-import com.hoaxify.error.ApiError;
 import com.hoaxify.error.NotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -41,10 +41,21 @@ public class UserService {
     }
 
     public UserResponse getByUsername(String username) {
+        User user = findByUsername(username);
+        return converter.convertToUserResponse(user);
+    }
+
+    public UserResponse updateUser(String username, UpdateUserRequest updateUserRequest) {
+        User user = findByUsername(username);
+        user.setDisplayName(updateUserRequest.getDisplayName());
+        return converter.convertToUserResponse(userRepository.save(user));
+    }
+
+    private User findByUsername(String username) {
         Optional<User> userOptional = userRepository.findByUsername(username);
         if(userOptional.isEmpty()){
             throw new NotFoundException("User not found: " + username);
         }
-        return converter.convertToUserResponse(userOptional.get());
+        return userOptional.get();
     }
 }
