@@ -31,4 +31,9 @@ public class UserController {
     public ResponseEntity<Page<UserResponse>> getUsers(Pageable page, @CurrentUser User user) {
         return ResponseEntity.ok(userService.getUsers(page, user));
     }
+
+    @GetMapping("/{username}")
+    public ResponseEntity<UserResponse> getUser(@PathVariable String username) {
+        return ResponseEntity.ok(userService.getByUsername(username));
+    }
 }
