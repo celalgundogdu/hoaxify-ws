@@ -12,6 +12,7 @@ public class UserDtoConverter {
         userResponse.setId(user.getId());
         userResponse.setUsername(user.getUsername());
         userResponse.setDisplayName(user.getDisplayName());
+        userResponse.setImage(user.getImage());
         return userResponse;
     }
 }

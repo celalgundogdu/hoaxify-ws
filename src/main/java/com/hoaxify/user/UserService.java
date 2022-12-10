@@ -5,21 +5,26 @@ import com.hoaxify.dto.request.CreateUserRequest;
 import com.hoaxify.dto.request.UpdateUserRequest;
 import com.hoaxify.dto.response.UserResponse;
 import com.hoaxify.error.NotFoundException;
+import com.hoaxify.file.FileService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.io.*;
 import java.util.Optional;
 
 @Service
 public class UserService {
 
+    private final FileService fileService;
     private final UserRepository userRepository;
     private final UserDtoConverter converter;
     private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository, UserDtoConverter converter, PasswordEncoder passwordEncoder) {
+    public UserService(FileService fileService, UserRepository userRepository, UserDtoConverter converter,
+                       PasswordEncoder passwordEncoder) {
+        this.fileService = fileService;
         this.userRepository = userRepository;
         this.converter = converter;
         this.passwordEncoder =  passwordEncoder;
@@ -47,7 +52,21 @@ public class UserService {
 
     public UserResponse updateUser(String username, UpdateUserRequest updateUserRequest) {
         User user = findByUsername(username);
-        user.setDisplayName(updateUserRequest.getDisplayName());
+        if (updateUserRequest.getDisplayName() != null) {
+            user.setDisplayName(updateUserRequest.getDisplayName());
+        }
+        if(updateUserRequest.getImage() != null) {
+            String oldImageName = user.getImage();
+            try {
+                String storedFileName = fileService.writeBase64EncodedStringToFile(updateUserRequest.getImage());
+                user.setImage(storedFileName);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if(oldImageName != null) {
+                fileService.deleteFile(oldImageName);
+            }
+        }
         return converter.convertToUserResponse(userRepository.save(user));
     }
 
