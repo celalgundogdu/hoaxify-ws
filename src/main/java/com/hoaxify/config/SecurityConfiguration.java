@@ -20,6 +20,8 @@ public class SecurityConfiguration {
 
         http.httpBasic().authenticationEntryPoint(new AuthEntryPoint());
 
+        http.headers().frameOptions().disable();
+
         http.authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/api/v1/auth").authenticated()
                 .antMatchers(HttpMethod.PUT, "/api/v1/users/{username}").authenticated()
