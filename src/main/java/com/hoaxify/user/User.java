@@ -1,5 +1,6 @@
 package com.hoaxify.user;
 
+import com.hoaxify.hoax.Hoax;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -7,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.List;
 
 @Data
 @Entity
@@ -24,6 +26,9 @@ public class User implements UserDetails {
     private String password;
 
     private String image;
+
+    @OneToMany(mappedBy = "user")
+    private List<Hoax> hoaxes;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

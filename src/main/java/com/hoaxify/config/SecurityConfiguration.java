@@ -25,6 +25,7 @@ public class SecurityConfiguration {
         http.authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/api/v1/auth").authenticated()
                 .antMatchers(HttpMethod.PUT, "/api/v1/users/{username}").authenticated()
+                .antMatchers(HttpMethod.POST, "/api/v1/hoaxes").authenticated()
                 .and()
                 .authorizeRequests().anyRequest().permitAll();
 

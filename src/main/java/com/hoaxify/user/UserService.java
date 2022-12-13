@@ -70,7 +70,7 @@ public class UserService {
         return converter.convertToUserResponse(userRepository.save(user));
     }
 
-    private User findByUsername(String username) {
+    public User findByUsername(String username) {
         Optional<User> userOptional = userRepository.findByUsername(username);
         if(userOptional.isEmpty()){
             throw new NotFoundException("User not found: " + username);
